@@ -1,0 +1,5 @@
+com/JuanLoncharich/hibernateui/repository/UserRepository.class
+com/JuanLoncharich/hibernateui/model/User.class
+com/JuanLoncharich/hibernateui/service/UserService.class
+com/JuanLoncharich/hibernateui/controller/UserController.class
+com/JuanLoncharich/hibernateui/DemoApplication.class

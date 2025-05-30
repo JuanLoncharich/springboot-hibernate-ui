@@ -1,0 +1,5 @@
+/home/juanloncha/Documents/LicCienciasComp/Sem5/BasesDatos/springboot-hibernate-ui/backend/src/main/java/com/JuanLoncharich/hibernateui/DemoApplication.java
+/home/juanloncha/Documents/LicCienciasComp/Sem5/BasesDatos/springboot-hibernate-ui/backend/src/main/java/com/JuanLoncharich/hibernateui/model/User.java
+/home/juanloncha/Documents/LicCienciasComp/Sem5/BasesDatos/springboot-hibernate-ui/backend/src/main/java/com/JuanLoncharich/hibernateui/repository/UserRepository.java
+/home/juanloncha/Documents/LicCienciasComp/Sem5/BasesDatos/springboot-hibernate-ui/backend/src/main/java/com/JuanLoncharich/hibernateui/service/UserService.java
+/home/juanloncha/Documents/LicCienciasComp/Sem5/BasesDatos/springboot-hibernate-ui/backend/src/main/java/com/JuanLoncharich/hibernateui/controller/UserController.java
