@@ -32,26 +32,4 @@ Great for university students learning Java web development!
 ---
 
 ## 📦 Folder Structure
-springboot-hibernate-ui/
-│
-├── backend/
-│ ├── src/
-│ │ ├── main/
-│ │ │ ├── java/com/example/demo/
-│ │ │ │ ├── DemoApplication.java
-│ │ │ │ ├── model/User.java
-│ │ │ │ ├── repository/UserRepository.java
-│ │ │ │ ├── service/UserService.java
-│ │ │ │ └── controller/UserController.java
-│ │ │ └── resources/
-│ │ │ ├── application.properties
-│ │ └── test/
-│ └── pom.xml
-│
-├── frontend/
-│ ├── index.html
-│ ├── css/styles.css
-│ └── js/app.js
-│
-├── README.md
-└── LICENSE
+<pre><code>📁 springboot-hibernate-ui/ ├── backend/ │ ├── src/ │ │ └── main/ │ │ ├── java/com/example/demo/ │ │ │ ├── DemoApplication.java │ │ │ ├── model/ │ │ │ │ └── User.java │ │ │ ├── repository/ │ │ │ │ └── UserRepository.java │ │ │ ├── service/ │ │ │ │ └── UserService.java │ │ │ └── controller/ │ │ │ └── UserController.java │ │ └── resources/ │ │ └── application.properties │ └── test/ ├── pom.xml ├── frontend/ │ ├── index.html │ ├── css/ │ │ └── styles.css │ └── js/ │ └── app.js ├── README.md └── LICENSE </code></pre>
