@@ -1,6 +1,7 @@
 package com.JuanLoncharich.hibernateui.controller;
 
 import com.JuanLoncharich.hibernateui.model.User;
+import com.JuanLoncharich.hibernateui.model.Registro;
 import com.JuanLoncharich.hibernateui.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
