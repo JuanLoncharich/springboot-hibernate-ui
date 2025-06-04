@@ -15,6 +15,8 @@ public class ComidaManualRequest {
     public Double carbohidratos;
     public Double grasas;
 
+    public Double porcion;
+
     public Long alimentoId; // opcional
 
     public LocalDate getFecha() {
@@ -23,6 +25,14 @@ public class ComidaManualRequest {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public Double getPorcion() {
+        return porcion;
+    }
+
+    public void setPorcion(Double porcion) {
+        this.porcion = porcion;
     }
 
     public String getHorario() {

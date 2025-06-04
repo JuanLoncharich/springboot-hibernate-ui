@@ -1,23 +1,27 @@
 package com.JuanLoncharich.hibernateui.controller;
 
-import com.JuanLoncharich.hibernateui.dto.RegistroConAlimentosDTO;
-import com.JuanLoncharich.hibernateui.dto.RegistroAlimentoDTO;
-import com.JuanLoncharich.hibernateui.model.Registro;
-import com.JuanLoncharich.hibernateui.service.RegistroService;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
-import java.util.List;
-import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.JuanLoncharich.hibernateui.dto.ComidaManualRequest;
+import com.JuanLoncharich.hibernateui.dto.RegistroAlimentoDTO;
+import com.JuanLoncharich.hibernateui.model.Alimento;
 import com.JuanLoncharich.hibernateui.model.Contiene;
 import com.JuanLoncharich.hibernateui.model.ContieneId;
-import com.JuanLoncharich.hibernateui.repository.RegistroRepository;
-import com.JuanLoncharich.hibernateui.repository.ContieneRepository;
-import com.JuanLoncharich.hibernateui.dto.ComidaManualRequest;
-import com.JuanLoncharich.hibernateui.model.Alimento;
+import com.JuanLoncharich.hibernateui.model.Registro;
 import com.JuanLoncharich.hibernateui.repository.AlimentoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import java.util.Map;
+import com.JuanLoncharich.hibernateui.repository.ContieneRepository;
+import com.JuanLoncharich.hibernateui.repository.RegistroRepository;
+import com.JuanLoncharich.hibernateui.service.RegistroService;
 
 @RestController
 @RequestMapping("/api/registros")
@@ -61,6 +65,8 @@ public class RegistroController {
         alimentoManual.setProteinas(request.proteinas);
         alimentoManual.setCarbohidratos(request.carbohidratos);
         alimentoManual.setGrasas(request.grasas);
+        alimentoManual.setPorcion(request.cantidad);
+
 
         Alimento savedAlimento = alimentoRepository.save(alimentoManual);
 

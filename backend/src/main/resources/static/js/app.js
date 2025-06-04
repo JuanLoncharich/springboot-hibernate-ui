@@ -119,7 +119,8 @@ function crearRegistroConComida() {
     const proteinas = parseFloat(document.getElementById("manualProteinas").value);
     const carbohidratos = parseFloat(document.getElementById("manualCarbohidratos").value);
     const grasas = parseFloat(document.getElementById("manualGrasas").value);
-    const cantidad = parseFloat(document.getElementById("manualCantidad").value);
+    const cantidad = parseDouble(document.getElementById("manualCantidad").value);
+
 
     if (!fecha || !horario || !nombre || isNaN(calorias) || isNaN(cantidad)) {
         alert("Completa todos los campos obligatorios.");

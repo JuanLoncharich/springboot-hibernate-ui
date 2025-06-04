@@ -6,8 +6,8 @@ com/JuanLoncharich/hibernateui/repository/RegistroRepository.class
 com/JuanLoncharich/hibernateui/dto/RegistroAlimentoDTO.class
 com/JuanLoncharich/hibernateui/dto/AlimentoDTO.class
 com/JuanLoncharich/hibernateui/repository/AlimentoRepository.class
-com/JuanLoncharich/hibernateui/model/Alimento.class
 com/JuanLoncharich/hibernateui/controller/AuthController.class
+com/JuanLoncharich/hibernateui/model/Alimento.class
 com/JuanLoncharich/hibernateui/dto/ComidaManualRequest.class
 com/JuanLoncharich/hibernateui/controller/AuthController$RegisterRequest.class
 com/JuanLoncharich/hibernateui/DemoApplication.class

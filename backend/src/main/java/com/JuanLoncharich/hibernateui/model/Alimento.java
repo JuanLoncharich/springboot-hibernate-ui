@@ -1,7 +1,10 @@
 package com.JuanLoncharich.hibernateui.model;
 
-import jakarta.persistence.*;
-import java.util.List;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "alimento")
@@ -12,13 +15,13 @@ public class Alimento {
     private Long id;
 
     private String nombre;
-    private String porcion;
 
     private Double calorias;
     private Double proteinas;
     private Double carbohidratos;
     private Double grasas;
 
+    private Double porcion;
 
     // Relación inversa (opcional)
     // @OneToMany(mappedBy = "alimento")
@@ -33,20 +36,20 @@ public class Alimento {
         this.id = id;
     }
 
+    public Double getPorcion() {
+        return porcion;
+    }
+
+    public void setPorcion(Double porcion) {
+        this.porcion = porcion;
+    }
+
     public String getNombre() {
         return nombre;
     }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getPorcion() {
-        return porcion;
-    }
-
-    public void setPorcion(String porcion) {
-        this.porcion = porcion;
     }
 
     public Double getCalorias() {
