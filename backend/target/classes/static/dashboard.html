@@ -20,6 +20,41 @@
 <input id="searchAlimento" type="text" placeholder="Buscar alimento..." class="form-control mb-2" oninput="buscarAlimentos(this.value)">
 <div id="suggestionsContainer" class="mb-3"></div>
 
+<style>
+    #suggestionsContainer {
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background: #fff;
+        box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+    }
+    .suggestion-item {
+        padding: 8px 12px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .suggestion-item:last-child {
+        border-bottom: none;
+    }
+    .suggestion-item:hover {
+        background-color: #f0f8ff;
+    }
+    /* Cuadradito al lado izquierdo */
+    .suggestion-item::before {
+        content: "";
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        background-color: #49ff72;
+        border-radius: 3px;
+    }
+</style>
+
+
 <!-- Campos manuales -->
 <input id="manualNombre" placeholder="Nombre del alimento" class="form-control mb-2">
 <input id="manualCalorias" placeholder="Calorías por 100g" type="number" step="0.01" class="form-control mb-2">

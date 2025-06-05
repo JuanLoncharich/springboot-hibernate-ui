@@ -240,28 +240,31 @@ function limpiarFormulario() {
     registroEditandoId = null;
 }
 
-function buscarAlimentos(nombre) {
-    const container = document.getElementById("suggestionsContainer");
-    if (!nombre || nombre.length < 2) {
-        container.innerHTML = "";
-        return;
-    }
-
-    fetch(`/api/alimentos/buscar?nombre=${encodeURIComponent(nombre)}`)
-        .then(res => res.json())
-        .then(alimentos => {
+function buscarAlimentos(termino) {
+    fetch(`/api/alimentos/buscar-alimentos?termino=${encodeURIComponent(termino)}`)
+        .then(res => {
+            if (!res.ok) throw new Error("Error al buscar alimentos");
+            return res.json();
+        })
+        .then(data => {
+            const container = document.getElementById("suggestionsContainer");
             container.innerHTML = "";
 
-            alimentos.forEach(alimento => {
+            data.forEach(alimento => {
                 const div = document.createElement("div");
+                div.textContent = alimento.nombre;
                 div.className = "suggestion-item";
-                div.innerText = `${alimento.nombre} - ${alimento.calorias} kcal`;
                 div.onclick = () => seleccionarAlimento(alimento);
                 container.appendChild(div);
             });
         })
-        .catch(err => console.error("Error buscando alimentos:", err));
+        .catch(err => {
+            console.error("Error al buscar alimentos:", err);
+        });
 }
+
+
+
 
 function seleccionarAlimento(alimento) {
     document.getElementById("manualNombre").value = alimento.nombre;
@@ -269,8 +272,11 @@ function seleccionarAlimento(alimento) {
     document.getElementById("manualProteinas").value = alimento.proteinas;
     document.getElementById("manualCarbohidratos").value = alimento.carbohidratos;
     document.getElementById("manualGrasas").value = alimento.grasas;
-    document.getElementById("manualCantidad").focus();
+
+    // Opcionalmente limpiar sugerencias
+    document.getElementById("suggestionsContainer").innerHTML = "";
 }
+
 
 function cargarRegistros() {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));

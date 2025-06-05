@@ -2,9 +2,11 @@ package com.JuanLoncharich.hibernateui.controller;
 
 import com.JuanLoncharich.hibernateui.dto.AlimentoDTO;
 import com.JuanLoncharich.hibernateui.repository.AlimentoRepository;
+import com.JuanLoncharich.hibernateui.model.Alimento;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/alimentos")
@@ -20,4 +22,5 @@ public class AlimentoController {
     public List<AlimentoDTO> buscarAlimentos(@RequestParam String termino) {
         return alimentoRepo.findByNombreContainingIgnoreCase(termino);
     }
+
 }
