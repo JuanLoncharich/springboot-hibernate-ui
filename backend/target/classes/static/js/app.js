@@ -1,5 +1,6 @@
 
 
+let registroEditandoId = null;
 // Show sections
 function showRegister() {
     document.getElementById('authSection').style.display = 'none';
@@ -109,55 +110,124 @@ function agregarAlimento() {
 
     container.appendChild(div);
 }
-
 function crearRegistroConComida() {
-    const fecha = document.getElementById("fechaRegistro").value;
-    const horario = document.getElementById("horarioRegistro").value;
-
-    const nombre = document.getElementById("manualNombre").value;
-    const calorias = parseFloat(document.getElementById("manualCalorias").value);
-    const proteinas = parseFloat(document.getElementById("manualProteinas").value);
-    const carbohidratos = parseFloat(document.getElementById("manualCarbohidratos").value);
-    const grasas = parseFloat(document.getElementById("manualGrasas").value);
-    const cantidad = parseDouble(document.getElementById("manualCantidad").value);
-
-
-    if (!fecha || !horario || !nombre || isNaN(calorias) || isNaN(cantidad)) {
-        alert("Completa todos los campos obligatorios.");
-        return;
+    const datos = obtenerDatosFormulario();
+    if (!validarDatos(datos)) return;
+    if (registroEditandoId) {
+        modificarRegistro(registroEditandoId, datos);
+    } else {
+        crearNuevoRegistro(datos);
     }
+}
 
-    const request = {
-        fecha,
-        horario,
-        idUsuario: currentUser.id,
 
-        nombre,
-        calorias,
-        proteinas,
-        carbohidratos,
-        grasas,
-        cantidad
+function obtenerDatosFormulario() {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    return {
+        fecha: document.getElementById("fechaRegistro").value,
+        horario: document.getElementById("horarioRegistro").value,
+        nombre: document.getElementById("manualNombre").value,  // <-- aquí debe ser nombre
+        cantidad: parseFloat(document.getElementById("manualCantidad").value),
+        calorias: parseFloat(document.getElementById("manualCalorias").value),
+        proteinas: parseFloat(document.getElementById("manualProteinas").value),
+        carbohidratos: parseFloat(document.getElementById("manualCarbohidratos").value),
+        grasas: parseFloat(document.getElementById("manualGrasas").value),
+        idUsuario: currentUser.id
     };
+}
 
+
+function validarDatos(datos) {
+    if (!datos.fecha || !datos.horario || !datos.nombre || isNaN(datos.cantidad)) {
+        alert("Completa todos los campos obligatorios.");
+        return false;
+    }
+    if (!registroEditandoId && isNaN(datos.calorias)) {
+        alert("Faltan datos de calorías");
+        return false;
+    }
+    return true;
+}
+
+
+function crearNuevoRegistro(datos) {
     fetch("/api/registros/registrar-comida-manual", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(request)
+        body: JSON.stringify(datos)
     })
         .then(res => {
             if (!res.ok) throw new Error("Error al guardar registro");
             return res.json();
         })
         .then(() => {
-            alert("✅ Registro guardado exitosamente");
-            cargarRegistros(); // Recargar lista
+            alert("✅ Registro guardado");
             limpiarFormulario();
+            cargarRegistros();
         })
         .catch(err => {
             alert("❌ Hubo un error al guardar");
             console.error("Error:", err);
         });
+}
+
+function modificarRegistro(id, datos) {
+    // Para modificar, no enviamos macros porque solo editamos fecha, horario, nombre y cantidad
+    const payload = {
+        fecha: datos.fecha,
+        horario: datos.horario,
+        nombreAlimento: datos.nombreAlimento,
+        cantidad: datos.cantidad
+    };
+
+    fetch(`/api/registros/modificar-comida-manual/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+        .then(res => {
+            if (!res.ok) throw new Error("Error al modificar");
+            alert("✅ Registro modificado");
+            registroEditandoId = null;
+            limpiarFormulario();
+            cargarRegistros();
+        })
+        .catch(err => {
+            alert("❌ Error al modificar");
+            console.error(err);
+        });
+}
+
+function editarRegistro(registro) {
+    registroEditandoId = registro.id;
+
+    document.getElementById("fechaRegistro").value = registro.fecha;
+    document.getElementById("horarioRegistro").value = registro.horario;
+    document.getElementById("manualNombre").value = registro.nombreAlimento;
+    document.getElementById("manualCalorias").value = registro.caloriasPor100g || "";
+    document.getElementById("manualProteinas").value = registro.proteinas || "";
+    document.getElementById("manualCarbohidratos").value = registro.carbohidratos || "";
+    document.getElementById("manualGrasas").value = registro.grasas || "";
+    document.getElementById("manualCantidad").value = registro.cantidad;
+}
+
+
+
+async function eliminarRegistro(id) {
+    const confirmado = confirm("¿Estás seguro de eliminar este registro?");
+    if (!confirmado) return;
+
+    const response = await fetch(`http://localhost:8080/api/registros/${id}`, {
+        method: 'DELETE'
+    });
+
+    if (!response.ok) {
+        alert("Error al eliminar el registro");
+        return;
+    }
+
+    alert("Registro eliminado permanentemente");
+    cargarRegistros(); // Actualizar la lista
 }
 
 function limpiarFormulario() {
@@ -167,6 +237,7 @@ function limpiarFormulario() {
     document.getElementById("manualCarbohidratos").value = "";
     document.getElementById("manualGrasas").value = "";
     document.getElementById("manualCantidad").value = "";
+    registroEditandoId = null;
 }
 
 function buscarAlimentos(nombre) {
@@ -236,3 +307,14 @@ function cargarRegistros() {
         });
 }
 
+function prepararEdicion(registro) {
+    registroEditandoId = registro.id;
+
+    document.getElementById("fechaRegistro").value = registro.fecha;
+    document.getElementById("horarioRegistro").value = registro.horario;
+    document.getElementById("manualNombre").value = registro.nombreAlimento;
+    document.getElementById("manualCantidad").value = registro.cantidad;
+
+    // No modificamos macros porque no vienen del back en este caso
+    alert("Editando registro. Modificá y hacé clic en 'Guardar Registro'.");
+}

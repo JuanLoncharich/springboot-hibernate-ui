@@ -21,7 +21,7 @@ public class ContieneId implements Serializable {
     public void setIdComida(Long idComida) { this.idComida = idComida; }
 
     public Long getIdAlimento() { return idAlimento; }
-    public void setIdAlimento(Long idAlimento) { this.idAlimento = idAlimento; }
+    public void setIdAlimento(Long idAlimento) { this.idAlimento    = idAlimento; }
 
     @Override
     public boolean equals(Object o) {

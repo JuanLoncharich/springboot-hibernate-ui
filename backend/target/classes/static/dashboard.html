@@ -38,6 +38,7 @@
 
 <script src="js/app.js"></script>
 <script>
+
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
     if (!currentUser) {
@@ -45,7 +46,6 @@
     } else {
         document.getElementById("userName").innerText = currentUser.nombre || "Usuario";
     }
-
     function cargarRegistros() {
         fetch(`/api/registros/alimentos?idUsuario=${currentUser.id}`)
             .then(res => res.json())
@@ -59,22 +59,97 @@
                 }
 
                 registros.forEach(r => {
+                    // Crear el contenedor del registro
                     const div = document.createElement("div");
                     div.className = "card p-3 mb-2";
 
+                    // Contenido con modo vista (view) y edición (edit)
                     div.innerHTML = `
+                    <div class="view-mode">
                         <strong>${r.fecha}</strong> - ${r.horario}<br>
                         <b>${r.nombreAlimento}</b><br>
                         Cantidad: ${r.cantidad}g<br>
-                        Calorías: ${(r.caloriasTotales || 0).toFixed(2)} kcal
-                    `;
+                        Calorías: ${(r.caloriasTotales || 0).toFixed(2)} kcal<br>
+                        Proteínas: ${(r.proteinas || 0).toFixed(2)}g<br>
+                        Carbohidratos: ${(r.carbohidratos || 0).toFixed(2)}g<br>
+                        Grasas: ${(r.grasas || 0).toFixed(2)}g
+                    </div>
+                    <div class="edit-mode d-none">
+                        Fecha: <input type="date" class="form-control mb-1" value="${r.fecha}"><br>
+                        Hora: <input type="time" class="form-control mb-1" value="${r.horario}"><br>
+                        Cantidad (g): <input type="number" step="0.01" class="form-control mb-1 cantidad" value="${r.cantidad}"><br>
+                        <button class="btn btn-success btn-sm guardar-btn">Guardar</button>
+                        <button class="btn btn-secondary btn-sm cancelar-btn">Cancelar</button>
+                    </div>
+                `;
+
+                    // Botón eliminar
+                    const btnEliminar = document.createElement("button");
+                    btnEliminar.textContent = "Eliminar";
+                    btnEliminar.className = "btn btn-sm btn-danger mt-2";
+                    btnEliminar.onclick = () => eliminarRegistro(r.id);
+                    div.appendChild(btnEliminar);
+
+                    // Botón editar
+                    const btnEditar = document.createElement("button");
+                    btnEditar.textContent = "Editar";
+                    btnEditar.className = "btn btn-sm btn-warning mt-2 ms-2";
+                    btnEditar.onclick = () => {
+                        div.querySelector(".view-mode").classList.add("d-none");
+                        div.querySelector(".edit-mode").classList.remove("d-none");
+                    };
+                    div.appendChild(btnEditar);
+
+                    // Guardar cambios
+                    div.querySelector(".guardar-btn").onclick = () => {
+                        const nuevaFecha = div.querySelector('input[type="date"]').value;
+                        const nuevoHorario = div.querySelector('input[type="time"]').value;
+                        const nuevaCantidad = parseFloat(div.querySelector('.cantidad').value);
+
+                        if (!nuevaFecha || !nuevoHorario || isNaN(nuevaCantidad)) {
+                            alert("Completa los campos correctamente.");
+                            return;
+                        }
+
+                        fetch(`/api/registros/modificar-comida-manual/${r.id}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                fecha: nuevaFecha,
+                                horario: nuevoHorario,
+                                cantidad: nuevaCantidad
+                            })
+                        })
+                            .then(res => {
+                                if (!res.ok) throw new Error("Error al actualizar");
+                                // no intentamos parsear JSON porque no hay body
+                            })
+                            .then(() => {
+                                alert("✅ Registro actualizado");
+                                cargarRegistros(); // Recargar la lista actualizada
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                alert("❌ Hubo un error al actualizar");
+                            });
+                    };
+
+                    // Cancelar edición
+                    div.querySelector(".cancelar-btn").onclick = () => {
+                        div.querySelector(".edit-mode").classList.add("d-none");
+                        div.querySelector(".view-mode").classList.remove("d-none");
+                    };
+
+                    // Agregar al contenedor principal
                     container.appendChild(div);
                 });
             })
             .catch(err => {
                 console.error("Error cargando registros:", err);
+                alert("Hubo un error al cargar tus registros.");
             });
     }
+
 
     window.onload = () => {
         cargarRegistros();
