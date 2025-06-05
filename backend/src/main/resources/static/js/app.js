@@ -198,21 +198,6 @@ function modificarRegistro(id, datos) {
         });
 }
 
-function editarRegistro(registro) {
-    registroEditandoId = registro.id;
-
-    document.getElementById("fechaRegistro").value = registro.fecha;
-    document.getElementById("horarioRegistro").value = registro.horario;
-    document.getElementById("manualNombre").value = registro.nombreAlimento;
-    document.getElementById("manualCalorias").value = registro.caloriasPor100g || "";
-    document.getElementById("manualProteinas").value = registro.proteinas || "";
-    document.getElementById("manualCarbohidratos").value = registro.carbohidratos || "";
-    document.getElementById("manualGrasas").value = registro.grasas || "";
-    document.getElementById("manualCantidad").value = registro.cantidad;
-}
-
-
-
 async function eliminarRegistro(id) {
     const confirmado = confirm("¿Estás seguro de eliminar este registro?");
     if (!confirmado) return;

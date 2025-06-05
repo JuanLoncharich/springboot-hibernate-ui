@@ -2,7 +2,7 @@ package com.JuanLoncharich.hibernateui.controller;
 
 import java.time.LocalTime;
 import java.util.List;
-
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,20 +66,27 @@ public class RegistroController {
                     .body(Map.of("error", "La cantidad debe ser mayor a cero"));
         }
 
-        // 1. Crear un nuevo Alimento para esta comida manual
-        Alimento alimentoManual = new Alimento();
-        alimentoManual.setNombre(request.nombre);
-        alimentoManual.setCalorias(request.calorias);
-        alimentoManual.setProteinas(request.proteinas);
-        alimentoManual.setCarbohidratos(request.carbohidratos);
-        alimentoManual.setGrasas(request.grasas);
+        // Intentar buscar un alimento existente por nombre
+        Optional<Alimento> alimentoExistenteOpt = alimentoRepository.findByNombre(request.nombre);
 
-        alimentoManual.setPorcion(request.cantidad);
+        Alimento alimentoManual;
 
+        if (alimentoExistenteOpt.isPresent()) {
+            alimentoManual = alimentoExistenteOpt.get();
+        } else {
+            // Crear nuevo alimento si no existe
+            alimentoManual = new Alimento();
+            alimentoManual.setNombre(request.nombre);
+            alimentoManual.setCalorias(request.calorias);
+            alimentoManual.setProteinas(request.proteinas);
+            alimentoManual.setCarbohidratos(request.carbohidratos);
+            alimentoManual.setGrasas(request.grasas);
+            alimentoManual.setPorcion(100.0);
 
-        Alimento savedAlimento = alimentoRepository.save(alimentoManual);
+            alimentoManual = alimentoRepository.save(alimentoManual);
+        }
 
-        // 2. Crear el Registro
+        // Crear el registro
         Registro registro = new Registro();
         registro.setFecha(request.fecha);
         registro.setHorario(LocalTime.parse(request.horario));
@@ -87,22 +94,23 @@ public class RegistroController {
 
         Registro savedRegistro = registroRepo.save(registro);
 
-        // 3. Crear Contiene con el alimento recién creado
+        // Crear Contiene con el alimento encontrado o creado
         Contiene contiene = new Contiene();
 
         ContieneId id = new ContieneId();
         id.setIdComida(savedRegistro.getId());
-        id.setIdAlimento(savedAlimento.getId());
+        id.setIdAlimento(alimentoManual.getId());
 
         contiene.setId(id);
         contiene.setCantidad(request.cantidad);
         contiene.setRegistro(savedRegistro);
-        contiene.setAlimento(savedAlimento);
+        contiene.setAlimento(alimentoManual);
 
         contieneRepo.save(contiene);
 
         return ResponseEntity.ok(Map.of("message", "Registro creado con comida personalizada"));
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarRegistro(@PathVariable Long id) {
